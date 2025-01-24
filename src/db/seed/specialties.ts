@@ -1,0 +1,33 @@
+export const specialties = [
+  { value: "Bipolar" },
+  { value: "LGBTQ" },
+  { value: "Medication/Prescribing" },
+  { value: "Suicide History/Attempts" },
+  {
+    value:
+      "General Mental Health (anxiety, depression, stress, grief, life transitions)",
+  },
+  { value: "Men's issues" },
+  { value: "Relationship Issues (family, friends, couple, etc)" },
+  { value: "Trauma & PTSD" },
+  { value: "Personality disorders" },
+  { value: "Personal growth" },
+  { value: "Substance use/abuse" },
+  { value: "Pediatrics" },
+  {
+    value: "Women's issues (post-partum, infertility, family planning)",
+  },
+  { value: "Chronic pain" },
+  { value: "Weight loss & nutrition" },
+  { value: "Eating disorders" },
+  { value: "Diabetic Diet and nutrition" },
+  { value: "Coaching (leadership, career, academic and wellness)" },
+  { value: "Life coaching" },
+  { value: "Obsessive-compulsive disorders" },
+  { value: "Neuropsychological evaluations & testing (ADHD testing)" },
+  { value: "Attention and Hyperactivity (ADHD)" },
+  { value: "Sleep issues" },
+  { value: "Schizophrenia and psychotic disorders" },
+  { value: "Learning disorders" },
+  { value: "Domestic abuse" },
+];
