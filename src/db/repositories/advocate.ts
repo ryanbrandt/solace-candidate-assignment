@@ -16,7 +16,6 @@ export const getFilteredAdvocateIds = async (
   filterParameters: ParsedGetAdvocateQueryParameters,
   filteredSpecialtyIds: Array<number>
 ): Promise<Array<number>> => {
-  console.log(filterParameters);
   const queryResult = await db
     .selectDistinctOn([advocate.id], {
       advocateId: advocate.id,
@@ -35,7 +34,7 @@ export const getFilteredAdvocateIds = async (
           !!filterParameters.firstName
         ),
         conditionalWhereFilter(
-          () => ilike(advocate.firstName, `%${filterParameters.firstName}%`),
+          () => ilike(advocate.lastName, `%${filterParameters.lastName}%`),
           !!filterParameters.lastName
         ),
         conditionalWhereFilter(
@@ -49,7 +48,7 @@ export const getFilteredAdvocateIds = async (
         ),
         conditionalWhereFilter(
           () => ilike(degree.value, `%${filterParameters.degree}%`),
-          !!degree
+          !!filterParameters.degree
         ),
         conditionalWhereFilter(
           () => inArray(specialty.id, filteredSpecialtyIds),
