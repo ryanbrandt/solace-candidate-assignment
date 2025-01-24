@@ -1,91 +1,45 @@
 "use client";
 
+import { useDebounce } from "@ryanbrandt/react-quick-ui";
 import { useEffect, useState } from "react";
+import AdvocateTable from "@/app/_components/advocateTable";
+import { fetchAdvocates } from "@/app/services/advocateService";
+import { GetAdvocateResponseContent } from "@/app/types";
+import ErrorMessage from "@/app/_components/errorMessage";
+import { useAdvocateSearchForm } from "@/app/hooks/useAdvocateSearchForm";
+import AdvocateSearchForm from "./_components/advocateSearchForm";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState<GetAdvocateResponseContent>([]);
+  const [error, setError] = useState<string | null>(null);
 
+  const [formState, queryParameters] = useAdvocateSearchForm();
+
+  // so we dont make a request on each keystroke
+  const debouncedQueryParameters = useDebounce(queryParameters, 250);
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
+    setError(null);
+
+    fetchAdvocates(debouncedQueryParameters)
+      .then((result) => {
+        setAdvocates(result.content);
+      })
+      .catch((e) => {
+        setError(e.message);
       });
-    });
-  }, []);
-
-  const onChange = (e) => {
-    const searchTerm = e.target.value;
-
-    document.getElementById("search-term").innerHTML = searchTerm;
-
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
-      return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
-      );
-    });
-
-    setFilteredAdvocates(filteredAdvocates);
-  };
-
-  const onClick = () => {
-    console.log(advocates);
-    setFilteredAdvocates(advocates);
-  };
+  }, [debouncedQueryParameters, setAdvocates, setError]);
 
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
+    <main className="flex flex-col items-center align-center m-24">
+      <h1 className="font-medium text-lg m-5">Search Solace Advocates</h1>
       <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+        <AdvocateSearchForm formState={formState} />
       </div>
-      <br />
-      <br />
-      <table>
-        <thead>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>City</th>
-          <th>Degree</th>
-          <th>Specialties</th>
-          <th>Years of Experience</th>
-          <th>Phone Number</th>
-        </thead>
-        <tbody>
-          {filteredAdvocates.map((advocate) => {
-            return (
-              <tr>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s) => (
-                    <div>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      {error ? (
+        <ErrorMessage message={error} />
+      ) : (
+        <AdvocateTable advocates={advocates} />
+      )}
     </main>
   );
 }
