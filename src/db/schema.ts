@@ -82,9 +82,9 @@ export const advocateDegree = pgTable(
 );
 
 export const advocateRelations = relations(advocate, ({ many }) => ({
-  degrees: many(advocateDegree),
-  specialties: many(advocateSpecialty),
-  cities: many(advocateCity),
+  advocateDegrees: many(advocateDegree),
+  advocateSpecialties: many(advocateSpecialty),
+  advocateCities: many(advocateCity),
 }));
 
 export const cityRelations = relations(city, ({ many }) => ({

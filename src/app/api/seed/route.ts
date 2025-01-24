@@ -69,17 +69,17 @@ export async function POST() {
     // But I'm not familiar enough with this ORM to know if thats possible
     const result = await tx.query.advocate.findMany({
       with: {
-        degrees: {
+        advocateDegrees: {
           with: {
             degree: true,
           },
           columns: {},
         },
-        specialties: {
+        advocateSpecialties: {
           with: { specialty: true },
           columns: {},
         },
-        cities: {
+        advocateCities: {
           with: {
             city: true,
           },
